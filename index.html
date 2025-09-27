@@ -3,333 +3,134 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ReviewBoost — Get more Google & Trustpilot reviews, automatically</title>
-<meta name="description" content="Trigger policy-safe SMS/Email/WhatsApp requests at job-complete, collect more authentic reviews, and prove ROI with audit logs and analytics." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>ReviewBoost — Get More Reviews, Automatically</title>
+<meta name="description" content="Automated SMS/Email/WhatsApp review requests, compliant with Google & Trustpilot policies. Grow your reputation without hassle." />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg:#0a0a0a; --fg:#e5e5e5; --muted:#a0a6b0; --card:#111827; --border:#212938;
-  --accent:#10b981; --accent2:#60a5fa;
+  --bg:#ffffff; --fg:#1e293b; --muted:#64748b; --border:#e2e8f0;
+  --accent:#2563eb; --accent2:#22c55e;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--fg)}
-a{color:inherit;text-decoration:none}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+a{text-decoration:none}
 .container{max-width:1120px;margin:0 auto;padding:0 24px}
 h1,h2,h3{letter-spacing:-.02em}
-.muted{color:var(--muted)}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:800;font-size:14px;background:#fff;color:#0b0b0b;transition:transform .15s ease, box-shadow .15s ease}
-.btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(0,0,0,.45)}
-.btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.18)}
-.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#d0d6df;padding:6px 12px;border-radius:999px;font-size:12px}
-.badge .dot{width:8px;height:8px;border-radius:999px;background:var(--accent)}
-.card{border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);border-radius:18px;padding:22px;box-shadow:0 0 0 1px rgba(255,255,255,.04),0 30px 60px -15px rgba(0,0,0,.5)}
-.section{padding:96px 0}
-.grid-2{display:grid;gap:20px;grid-template-columns:1.1fr .9fr}
-.grid-3{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
-.grid-4{display:grid;gap:18px;grid-template-columns:repeat(4,1fr)}
-@media(max-width:980px){.grid-2{grid-template-columns:1fr}.grid-3,.grid-4{grid-template-columns:1fr}}
-nav{position:sticky;top:0;background:rgba(10,10,10,.55);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.06);z-index:50}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:10px;font-weight:700;font-size:14px;background:var(--accent);color:#fff;transition:.2s}
+.btn:hover{background:#1d4ed8}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.card{border:1px solid var(--border);background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 10px rgba(0,0,0,.04)}
+.section{padding:80px 0}
+.grid-3{display:grid;gap:20px;grid-template-columns:repeat(3,1fr)}
+@media(max-width:960px){.grid-3{grid-template-columns:1fr}}
+nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);z-index:50}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800}
-.logo .mark{width:28px;height:28px;border-radius:10px;background:linear-gradient(135deg,var(--accent2),var(--accent))}
-.links{display:none;gap:22px;color:#cbd5e1;font-weight:600}
-@media(min-width:780px){.links{display:flex}}
-#progress{position:fixed;left:0;top:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));z-index:999}
-
-.hero{position:relative;overflow:hidden;text-align:center;padding:120px 0 88px}
-.hero .orb{position:absolute;left:50%;top:0;transform:translate(-50%,-30%);width:760px;height:760px;border-radius:50%;filter:blur(52px);opacity:.25;background:radial-gradient(closest-side, rgba(96,165,250,.28), transparent 70%)}
-h1{font-size:clamp(36px,6vw,64px);line-height:1.08;margin:16px 0}
+.logo{font-weight:800;font-size:18px;color:var(--accent)}
+.hero{padding:120px 0 80px;text-align:center;background:linear-gradient(180deg,#f8fafc,#fff)}
+.hero h1{font-size:clamp(36px,6vw,56px);margin:0}
+.hero p{max-width:720px;margin:16px auto;color:var(--muted);font-size:18px}
+.badge{display:inline-block;background:rgba(37,99,235,.08);color:var(--accent);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600}
 .kpis{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
-.kpi{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);padding:8px 12px;border-radius:999px;font-size:12px;color:#cfd6df}
-.pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
-.pill{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#e5e7eb;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(96,165,250,.12), rgba(255,255,255,.04))}
-.split{display:grid;gap:18px;grid-template-columns:1fr 1fr}
-@media(max-width:980px){.split{grid-template-columns:1fr}}
-
-.marquee{position:relative;padding:18px 0;background:linear-gradient(180deg,rgba(96,165,250,.06),rgba(16,185,129,.06));border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden}
-.marquee .track{display:inline-flex;gap:18px;white-space:nowrap;animation:scroll 32s linear infinite;min-width:max-content}
-.marquee:hover .track{animation-play-state:paused}
-@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-.testi{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
-@media(max-width:980px){.testi{grid-template-columns:1fr}}
-.quote{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:16px;padding:18px}
-.quote small{color:#a3b0c2}
-
-.faq dt{font-weight:700;margin:12px 0 6px}
-.faq dd{margin:0 0 12px;color:#c9d0da}
-
-footer{border-top:1px solid var(--border);padding:28px 0;color:#94a3b8;font-size:14px}
-.link{color:#fff;text-decoration:none}
-
-.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease, transform .5s ease}
-.reveal.in{opacity:1;transform:none}
+.kpi{font-size:13px;color:var(--muted)}
+footer{border-top:1px solid var(--border);padding:30px 0;text-align:center;color:var(--muted);font-size:14px}
 </style>
 </head>
 <body>
 
-<div id="progress"></div>
-
 <nav>
   <div class="container nav-inner">
-    <div class="logo"><span class="mark"></span><span>ReviewBoost</span></div>
-    <div class="links">
-      <a href="#features">Features</a>
-      <a href="#how">How it works</a>
-      <a href="#proof">Proof</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
+    <div class="logo">ReviewBoost</div>
+    <div style="display:flex;gap:18px;align-items:center">
+      <a href="#features" style="color:var(--fg)">Features</a>
+      <a href="#pricing" style="color:var(--fg)">Pricing</a>
+      <a class="btn" href="#waitlist">Start Free</a>
     </div>
-    <a class="btn" href="#waitlist">Start free</a>
   </div>
 </nav>
 
 <header class="hero">
-  <div class="orb" aria-hidden="true"></div>
   <div class="container">
-    <div class="badge reveal"><span class="dot"></span> Policy-safe by design — no gating, no bribes</div>
-    <h1 class="reveal">Get more <span style="background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;">Google & Trustpilot</span> reviews automatically</h1>
-    <p class="muted reveal" style="max-width:820px;margin:10px auto 0;font-size:18px">
-      Trigger review requests at job-complete via SMS/Email/WhatsApp, show one-tap deep links, capture private feedback in parallel, and prove ROI with audit-ready logs.
-    </p>
-    <div class="reveal" style="margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a class="btn" href="#waitlist">Start free</a>
-      <a class="btn ghost" href="#demo">See demo</a>
+    <div class="badge">⭐ Policy-safe review growth</div>
+    <h1>Get More Google & Trustpilot Reviews — Automatically</h1>
+    <p>Send one-tap review requests right when jobs are done. Stay compliant, capture more proof, and grow trust without chasing customers.</p>
+    <div style="margin-top:24px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
+      <a class="btn" href="#waitlist">Start for Free</a>
+      <a class="btn ghost" href="#demo">See Demo</a>
     </div>
-    <div class="kpis reveal">
+    <div class="kpis">
       <span class="kpi">No credit card required</span>
-      <span class="kpi">Opt-out & consent logging</span>
-      <span class="kpi">Works with Jobber • ServiceM8 • Zapier</span>
-    </div>
-    <div class="pills reveal">
-      <span class="pill">⭐ Google</span>
-      <span class="pill">⭐ Trustpilot</span>
-      <span class="pill">💬 SMS</span>
-      <span class="pill">📨 Email</span>
-      <span class="pill">🟢 WhatsApp</span>
-      <span class="pill">🧾 Audit Logs</span>
+      <span class="kpi">Opt-out built-in</span>
+      <span class="kpi">Works with Jobber, ServiceM8 & Zapier</span>
     </div>
   </div>
 </header>
 
-<!-- Rolling logos -->
-<div class="marquee" aria-label="Supported platforms">
-  <div class="container">
-    <div class="track" aria-hidden="true">
-      <span class="pill">Google</span><span class="pill">Trustpilot</span><span class="pill">Zapier</span><span class="pill">Jobber</span><span class="pill">ServiceM8</span><span class="pill">Stripe</span><span class="pill">Gmail</span><span class="pill">Twilio</span>
-      <span class="pill">Google</span><span class="pill">Trustpilot</span><span class="pill">Zapier</span><span class="pill">Jobber</span><span class="pill">ServiceM8</span><span class="pill">Stripe</span><span class="pill">Gmail</span><span class="pill">Twilio</span>
-    </div>
-  </div>
-</div>
-
-<!-- Feature bands -->
 <section id="features" class="section">
   <div class="container">
-    <h2 class="reveal" style="font-size:34px;margin:0 0 12px">Everything you need to turn happy customers into public proof</h2>
-    <p class="muted reveal" style="max-width:720px">Steady, compounding review volume without policy headaches.</p>
-
-    <div class="grid-3" style="margin-top:22px">
-      <div class="card reveal">
-        <h3>Automated, right-time asks</h3>
-        <p class="muted">Fire the request at job-complete, invoice-paid, or appointment-done. Choose timing (immediate / 24h / 7d) and a secondary cascade.</p>
+    <h2 style="font-size:32px;margin-bottom:20px;text-align:center">Features</h2>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Automated Triggers</h3>
+        <p class="muted">Send SMS/Email/WhatsApp review requests instantly at job completion, invoice paid, or appointment done.</p>
       </div>
-      <div class="card reveal">
-        <h3>One-tap deep links</h3>
-        <p class="muted">Open the exact Google or Trustpilot form—no searching, no friction. QR codes and NFC tap cards supported.</p>
+      <div class="card">
+        <h3>One-Tap Links</h3>
+        <p class="muted">Deep links open Google/Trustpilot directly — no searching, no friction. QR codes & NFC cards supported.</p>
       </div>
-      <div class="card reveal">
-        <h3>Private feedback inbox</h3>
-        <p class="muted">Offer a parallel private feedback path (not gated). Close loops fast and learn without breaking platform rules.</p>
-      </div>
-    </div>
-
-    <div class="grid-3" style="margin-top:18px">
-      <div class="card reveal">
-        <h3>Policy-safe by default</h3>
-        <p class="muted">No gating, no incentives for sentiment. Opt-out links and consent capture built-in, with exportable logs.</p>
-      </div>
-      <div class="card reveal">
-        <h3>Team prompts & NFC cards</h3>
-        <p class="muted">Hand technicians a tap/QR card with your review hub. In-person ask + one tap = more reviews.</p>
-      </div>
-      <div class="card reveal">
-        <h3>Review pipeline analytics</h3>
-        <p class="muted">Track invites → clicks → public reviews. See which channels & timings perform best and double down.</p>
+      <div class="card">
+        <h3>Private Feedback Path</h3>
+        <p class="muted">Let unhappy customers leave private feedback while happy ones post publicly. All policy-safe, no gating.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- “How it works” split -->
-<section id="how" class="section" style="padding-top:0">
-  <div class="container grid-2">
-    <div class="reveal">
-      <h2 style="font-size:32px;margin:0 0 10px">How it works</h2>
-      <ol class="muted" style="line-height:1.8">
-        <li><strong>Connect tools</strong> — add Google/Trustpilot links, connect Jobber/ServiceM8 or Zapier.</li>
-        <li><strong>Set your cadence</strong> — choose channels, timing, and templates (all policy-safe).</li>
-        <li><strong>Launch</strong> — invites go out, reviews roll in; your dashboard shows performance & logs.</li>
-      </ol>
-    </div>
-    <!-- Simple estimator card -->
-    <div class="card reveal" id="demo">
-      <h3 style="margin:0 0 6px">Quick estimator</h3>
-      <p class="muted" style="margin:0 0 10px">Rough reviews per 100 requests (demo only).</p>
-      <div style="display:grid;gap:12px">
-        <div>
-          <label class="muted" style="font-size:13px">Primary channel</label>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
-            <button class="btn ghost" data-ch="sms">SMS</button>
-            <button class="btn ghost" data-ch="email">Email</button>
-            <button class="btn ghost" data-ch="whatsapp">WhatsApp</button>
-          </div>
-        </div>
-        <div>
-          <label class="muted" style="font-size:13px">Delay after job complete (minutes)</label>
-          <input id="delay" type="range" min="0" max="1440" step="15" value="60" style="width:100%">
-        </div>
-        <div>
-          <label class="muted" style="font-size:13px">Add-ons</label>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
-            <button class="btn ghost" data-addon="qr">QR on invoice/van</button>
-            <button class="btn ghost" data-addon="staff">In-person prompt</button>
-            <button class="btn ghost" data-addon="media">Before/after photo</button>
-          </div>
-        </div>
-        <div class="card" style="padding:14px;border-radius:12px">
-          <div><strong>Estimated reviews / 100 requests:</strong> <span id="est">14</span></div>
-          <div style="margin-top:8px" class="muted">We keep flows policy-safe: no gating, clear opt-outs, consent logging.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Proof / Testimonials -->
-<section id="proof" class="section" style="padding-top:0">
+<section id="pricing" class="section" style="background:#f9fafb">
   <div class="container">
-    <h2 class="reveal" style="font-size:32px;margin:0 0 12px">What customers say</h2>
-    <div class="testi">
-      <div class="quote reveal">
-        <p style="margin:0">“We went from quiet reviews to a steady stream in a month. The NFC cards + SMS timing just works.”</p>
-        <small>Owner, Heating & Plumbing Co.</small>
-      </div>
-      <div class="quote reveal">
-        <p style="margin:0">“Simple setup, no policy headaches. The audit log makes our team comfortable.”</p>
-        <small>Practice Manager, Dental Group</small>
-      </div>
-      <div class="quote reveal">
-        <p style="margin:0">“The analytics showed SMS+next-day email outperformed anything we tried before.”</p>
-        <small>GM, Multi-location Gym</small>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Pricing teaser -->
-<section id="pricing" class="section" style="padding-top:0">
-  <div class="container">
-    <h2 class="reveal" style="font-size:32px;margin:0 0 10px">Simple pricing</h2>
-    <div class="grid-3" style="margin-top:16px">
-      <div class="card reveal">
+    <h2 style="font-size:32px;margin-bottom:20px;text-align:center">Simple Pricing</h2>
+    <div class="grid-3">
+      <div class="card">
         <h3>Starter</h3>
-        <p class="muted">£99/mo — 1 location, SMS & Email, consent logs</p>
+        <p class="muted">£99/mo — 1 location, SMS & Email</p>
       </div>
-      <div class="card reveal" style="border-color:rgba(16,185,129,.6)">
+      <div class="card" style="border:2px solid var(--accent)">
         <h3>Pro</h3>
-        <p class="muted">£149/mo — 3 locations, WhatsApp cascade, private feedback inbox</p>
+        <p class="muted">£149/mo — 3 locations, WhatsApp cascade, private inbox</p>
       </div>
-      <div class="card reveal">
+      <div class="card">
         <h3>Partner</h3>
-        <p class="muted">Custom — multi-location, job system triggers, SLAs</p>
+        <p class="muted">Custom — multi-location, integrations, SLAs</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Waitlist / CTA -->
-<section id="waitlist" class="section" style="padding-top:0">
-  <div class="container" style="max-width:720px">
-    <div class="card reveal">
-      <h3 style="margin:0 0 6px">Start free</h3>
-      <p class="muted">Tell us where to send access. We prioritise teams ready to pilot in the next 30 days.</p>
-      <form id="wl" style="display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:12px">
-        <input id="email" type="email" placeholder="you@business.com" required
-          style="padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:#0c0c0c;color:#fff;font-size:14px;outline:none">
-        <button class="btn" type="submit">Get access</button>
+<section id="waitlist" class="section">
+  <div class="container" style="max-width:600px">
+    <div class="card" style="text-align:center">
+      <h3>Start Free Today</h3>
+      <p class="muted">Join the waitlist — no credit card required. We prioritise businesses ready to pilot within 30 days.</p>
+      <form id="wl" style="margin-top:16px;display:flex;gap:8px">
+        <input type="email" placeholder="you@business.com" required
+          style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:14px">
+        <button class="btn" type="submit">Get Access</button>
       </form>
-      <div id="thanks" style="display:none;margin-top:12px;border:1px solid #065f46;background:#064e3b;color:#d1fae5;padding:10px;border-radius:10px;font-size:14px">Thanks! You’re on the list.</div>
-      <p class="muted" style="font-size:12px;margin-top:10px">By submitting, you agree to our privacy policy. You can opt out anytime.</p>
+      <div id="thanks" style="display:none;margin-top:10px;color:var(--accent2);font-weight:600">Thanks! You’re on the list.</div>
     </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section id="faq" class="section" style="padding-top:0">
-  <div class="container">
-    <h2 class="reveal" style="font-size:32px;margin:0 0 10px">FAQ</h2>
-    <dl class="faq">
-      <dt>Is this compliant with Google/Trustpilot policies?</dt>
-      <dd>Yes—flows are designed to avoid gating and incentives. We show public review links and a parallel private feedback path, with consent and opt-out logging.</dd>
-      <dt>Can my team ask in person?</dt>
-      <dd>Absolutely. Use our QR/NFC cards and staff prompts so customers can tap and review in under 60 seconds.</dd>
-      <dt>What data do you store?</dt>
-      <dd>Minimal contact details (email/phone), timestamps, message events, and public review links. You control retention; exports and deletion are one click.</dd>
-      <dt>Will this work with our job system?</dt>
-      <dd>Yes—connect via Zapier, or native triggers for popular tools like Jobber and ServiceM8.</dd>
-    </dl>
   </div>
 </section>
 
 <footer>
-  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-    <p>© <span id="y"></span> ReviewBoost</p>
-    <div style="display:flex;gap:16px">
-      <a class="link" href="#">Privacy</a>
-      <a class="link" href="#">Security</a>
-      <a class="link" href="#">Contact</a>
-    </div>
+  <div class="container">
+    © <span id="y"></span> ReviewBoost — All rights reserved
   </div>
 </footer>
 
 <script>
-/* reveal on scroll */
-const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.18});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-/* progress bar */
-const prog=document.getElementById('progress');
-function updateP(){const s=window.scrollY,h=document.body.scrollHeight-window.innerHeight;prog.style.width=`${(h? s/h:0)*100}%`;}
-updateP();window.addEventListener('scroll',updateP,{passive:true});
-
-/* year + form */
 document.getElementById('y').textContent=new Date().getFullYear();
-const form=document.getElementById('wl');form.addEventListener('submit',e=>{e.preventDefault();document.getElementById('thanks').style.display='block';form.reset();});
-
-/* estimator */
-let channel='sms'; let delay=60; const addons=new Set();
-document.querySelectorAll('[data-ch]').forEach(b=>b.addEventListener('click',()=>{channel=b.dataset.ch;document.querySelectorAll('[data-ch]').forEach(x=>x.classList.toggle('ghost',x!==b));estimate();}));
-document.getElementById('delay').addEventListener('input',e=>{delay=parseInt(e.target.value,10);estimate();});
-document.querySelectorAll('[data-addon]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.addon; if(addons.has(k)){addons.delete(k);b.classList.add('ghost');} else{addons.add(k);b.classList.remove('ghost');} estimate();}));
-function estimate(){
-  const base={sms:.12,email:.06,whatsapp:.18}[channel]||.1;
-  let t=0;if(delay<=30)t=.06;else if(delay<=120)t=.04;
-  let add=0;if(addons.has('qr'))add+=.03;if(addons.has('staff'))add+=.05;if(addons.has('media'))add+=.02;add=Math.min(add,.10);
-  let rate=Math.min(base+t+add,.35); rate=Math.min(rate + 0.25*(1-rate)*0.25,.40);
-  document.getElementById('est').textContent=Math.round(rate*100).toString();
-}
-estimate();
-
-/* hero orb gentle follow */
-document.addEventListener('mousemove',e=>{
-  const orb=document.querySelector('.hero .orb'); if(!orb) return;
-  const x=(e.clientX/window.innerWidth-0.5)*56; const y=(e.clientY/window.innerHeight-0.2)*28;
-  orb.style.transform=`translate(calc(-50% + ${x}px), calc(-30% + ${y}px))`;
-},{passive:true});
+const f=document.getElementById('wl');f.addEventListener('submit',e=>{e.preventDefault();document.getElementById('thanks').style.display='block';f.reset();});
 </script>
+
 </body>
 </html>
