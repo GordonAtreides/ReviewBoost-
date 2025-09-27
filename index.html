@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ReviewBoost — Get more reviews, automatically (and compliantly)</title>
+<meta name="description" content="Simple, compliant review engine for local businesses. Trigger SMS/Email requests at job-complete, collect more Google & Trustpilot reviews, and prove ROI." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ===== Base ===== */
+:root {
+  --bg:#0a0a0a; --fg:#e5e5e5; --muted:#9ca3af; --card:#111827; --border:#1f2937; --ink:#0b1f22;
+  --accent1:#34d399; /* teal/green for trust/growth */
+  --accent2:#60a5fa; /* soft blue for calm/compliance */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--fg)}
+a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+h1,h2,h3{letter-spacing:-.02em}
+.muted{color:var(--muted)}
+.small{font-size:12px;color:#9ca3af}
+.btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#111;padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;transition:transform .15s ease, background .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn.outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.15)}
+.badge{display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);padding:6px 10px;border-radius:999px;color:#cbd5e1;font-size:12px}
+.badge .green{width:8px;height:8px;background:#34d399;border-radius:999px}
+.chip{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:12px;padding:10px;font-size:12px;color:#cbd5e1}
+.card{border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);border-radius:16px;padding:24px;box-shadow:0 0 0 1px rgba(255,255,255,.04), 0 30px 60px -15px rgba(0,0,0,.5);transition:transform .18s ease, box-shadow .18s ease, background .18s ease}
+.card:hover{transform:translateY(-4px);background:rgba(255,255,255,.06);box-shadow:0 30px 60px -12px rgba(0,0,0,.6)}
+.card h3{margin:10px 0 8px;font-size:18px}
+
+/* ===== Nav + sticky CTA ===== */
+.nav{position:sticky;top:0;backdrop-filter:blur(8px);background:rgba(10,10,10,.6);border-bottom:1px solid rgba(255,255,255,.06);z-index:40}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800}
+.dot{width:32px;height:32px;border-radius:12px;background:linear-gradient(135deg,var(--accent2),var(--accent1));display:inline-block}
+.links{display:none;gap:24px;color:#cbd5e1;font-size:14px}
+@media(min-width:768px){.links{display:flex}}
+.sticky-cta{position:sticky;top:56px;z-index:30;margin-top:-12px}
+.sticky-cta .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);backdrop-filter:blur(6px);border-radius:14px;padding:10px 14px}
+
+/* ===== Progress bar ===== */
+#progress{position:fixed;left:0;top:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent1),var(--accent2));z-index:9999;transform-origin:0 50%}
+
+/* ===== Hero ===== */
+.hero{position:relative;overflow:hidden;text-align:center;padding:120px 0 88px}
+.blob{position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 0%,rgba(52,211,153,.18),transparent);pointer-events:none}
+.hero .glow-wrap{pointer-events:none;position:absolute;inset:0}
+.hero .grain{position:absolute;inset:0;opacity:.06;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22 viewBox=%220 0 40 40%22><path d=%22M0 40 V0 H40%22 fill=%22none%22 stroke=%22white%22 stroke-opacity=%220.12%22/></svg>');}
+.hero .orb{position:absolute;left:50%;top:0;transform:translate(-50%,-20%);width:700px;height:700px;border-radius:50%;filter:blur(48px);background:radial-gradient(closest-side, rgba(96,165,250,.22), transparent 70%);transition:transform .25s ease;will-change:transform;}
+@media (prefers-reduced-motion: reduce){ .hero .orb{transition:none} }
+
+.chipgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:28px}
+@media(min-width:768px){.chipgrid{grid-template-columns:repeat(4,1fr)}}
+
+/* ===== Marquee ===== */
+.marquee{position:relative;padding:18px 0;background:linear-gradient(180deg, rgba(96,165,250,.06), rgba(52,211,153,.06));border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);overflow:hidden}
+.marquee .container{max-width:none;padding:0}
+.marquee::before,.marquee::after{content:"";position:absolute;top:0;bottom:0;width:12vw;z-index:2;pointer-events:none}
+.marquee::before{left:0;background:linear-gradient(90deg, rgba(10,10,10,1), rgba(10,10,10,0))}
+.marquee::after{right:0;background:linear-gradient(270deg, rgba(10,10,10,1), rgba(10,10,10,0))}
+.marquee .track{display:inline-flex;gap:18px;align-items:center;white-space:nowrap;will-change:transform;min-width:max-content;animation:marquee-scroll 35s linear infinite}
+.marquee .track:hover{animation-play-state:paused}
+@keyframes marquee-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.pill{--bg1:rgba(255,255,255,.06);--bd:rgba(255,255,255,.16);display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#e5e7eb;padding:10px 14px;border-radius:999px;border:1px solid var(--bd);background:var(--bg1);box-shadow:0 0 0 1px rgba(255,255,255,.03),0 12px 24px -10px rgba(0,0,0,.45);transition:transform .18s ease, background .18s ease, border-color .18s ease}
+.pill:hover{transform:translateY(-2px);background:rgba(255,255,255,.08)}
+
+/* ===== Sections ===== */
+.section{padding:90px 0}
+.grid-4{display:grid;gap:18px;margin-top:22px;grid-template-columns:repeat(4,1fr)}
+@media(max-width:980px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+.grid-3{display:grid;gap:18px;margin-top:22px;grid-template-columns:repeat(3,1fr)}
+@media(max-width:980px){.grid-3{grid-template-columns:1fr}}
+.grid-2{display:grid;gap:18px;margin-top:22px;grid-template-columns:repeat(2,1fr)}
+@media(max-width:980px){.grid-2{grid-template-columns:1fr}}
+
+/* ===== Demo ===== */
+.panel{border:1px solid rgba(255,255,255,.10);background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);border-radius:16px;padding:20px;box-shadow:0 0 0 1px rgba(255,255,255,.04), 0 30px 60px -15px rgba(0,0,0,.5)}
+.controls{display:grid;gap:16px}
+.field{display:grid;gap:8px}
+.field label{font-size:13px;color:#cbd5e1}
+.input,.select,.chipbtn,.btn-lite{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#fff;border-radius:12px;padding:10px 12px;font-weight:600}
+.select{appearance:none}
+.segment{display:flex;gap:8px;flex-wrap:wrap}
+.chipbtn{cursor:pointer}
+.chipbtn.active{background:#10b981;border-color:#10b981}
+.slider{appearance:none;width:100%;height:6px;border-radius:999px;background:rgba(255,255,255,.12);outline:none}
+.slider::-webkit-slider-thumb{appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;border:none}
+.kpis{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.kpi{font-size:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);padding:6px 10px;border-radius:999px;color:#cbd5e1}
+.status{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);border-radius:16px;padding:16px;margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:14px}
+.badge-lg{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;font-weight:800;letter-spacing:.02em}
+.badge-allow{background:#064e3b;color:#a7f3d0;border:1px solid #065f46}
+.badge-warn{background:#78350f;color:#fde68a;border:1px solid #92400e}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn-lite{cursor:pointer}
+.btn-lite.primary{background:#fff;color:#111;border-color:#fff}
+.btn-lite:hover{transform:translateY(-1px)}
+
+/* ===== Footer ===== */
+footer{border-top:1px solid var(--border);padding:32px 0;color:#94a3b8;font-size:14px}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.link{color:#fff;text-decoration:none}
+
+/* Reveal on scroll */
+.reveal{opacity:0; transform:translateY(16px); transition:opacity .5s ease, transform .5s ease}
+.reveal.in{opacity:1; transform:none}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .reveal{transition:none;opacity:1;transform:none}
+  .marquee .track{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <div class="logo"><span class="dot"></span><span>ReviewBoost</span></div>
+    <div class="links">
+      <a href="#mission">Mission</a>
+      <a href="#value">Value</a>
+      <a href="#how">How it works</a>
+      <a href="#demo">Demo</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#waitlist">Join</a>
+    </div>
+    <a class="btn" href="#waitlist">Get early access</a>
+  </div>
+</nav>
+
+<!-- Sticky CTA -->
+<div class="container sticky-cta">
+  <div class="bar">
+    <span class="muted" style="font-size:13px">Now inviting 10 design partners (UK local services)</span>
+    <a class="btn" href="#waitlist">Join waitlist</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="blob"></div>
+  <div class="glow-wrap"><div class="grain"></div><div class="orb" id="orb"></div></div>
+  <div class="container">
+    <div class="badge reveal"><span class="green"></span> Compliant by design — no gating, ever</div>
+    <h1 class="reveal">Get more <span style="background:linear-gradient(90deg,var(--accent2),var(--accent1));-webkit-background-clip:text;background-clip:text;color:transparent;">Google & Trustpilot</span> reviews automatically</h1>
+    <p class="muted reveal" style="font-size:18px;max-width:800px;margin:12px auto 0;">
+      Trigger SMS/Email requests at job-complete, collect more authentic reviews, and prove ROI — with opt-outs, consent logs, and policy-safe flows.
+    </p>
+    <div class="reveal" style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a class="btn" href="#waitlist">Join the waitlist</a>
+      <a class="btn outline" href="#demo">Try the interactive demo</a>
+    </div>
+
+    <div class="chipgrid reveal">
+      <div class="chip">Google Reviews</div>
+      <div class="chip">Trustpilot</div>
+      <div class="chip">SMS • Email • WhatsApp</div>
+      <div class="chip">Audit logs & opt-out ready</div>
+    </div>
+
+    <!-- Mini KPI cards -->
+    <div class="reveal" style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:22px">
+      <div class="card" style="padding:14px 18px"><strong>1–2 min</strong><div class="small">Average customer effort</div></div>
+      <div class="card" style="padding:14px 18px"><strong>+Volume</strong><div class="small">More asks → more reviews</div></div>
+      <div class="card" style="padding:14px 18px"><strong>Zero gating</strong><div class="small">Policy-safe by default</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- LOGOS MARQUEE -->
+<div class="marquee" aria-label="Supported platforms & tools">
+  <div class="container">
+    <div class="track" aria-hidden="true">
+      <span class="pill"><span>⭐</span> Google</span>
+      <span class="pill"><span>⭐</span> Trustpilot</span>
+      <span class="pill"><span>📨</span> Gmail</span>
+      <span class="pill"><span>💬</span> SMS</span>
+      <span class="pill"><span>🟢</span> WhatsApp</span>
+      <span class="pill"><span>🧾</span> Stripe</span>
+      <span class="pill"><span>🧰</span> Jobber</span>
+      <span class="pill"><span>🧰</span> ServiceM8</span>
+      <span class="pill"><span>📅</span> Calendly</span>
+      <span class="pill"><span>🧩</span> Zapier</span>
+      <!-- duplicate for continuous loop -->
+      <span class="pill"><span>⭐</span> Google</span>
+      <span class="pill"><span>⭐</span> Trustpilot</span>
+      <span class="pill"><span>📨</span> Gmail</span>
+      <span class="pill"><span>💬</span> SMS</span>
+      <span class="pill"><span>🟢</span> WhatsApp</span>
+      <span class="pill"><span>🧾</span> Stripe</span>
+      <span class="pill"><span>🧰</span> Jobber</span>
+      <span class="pill"><span>🧰</span> ServiceM8</span>
+      <span class="pill"><span>📅</span> Calendly</span>
+      <span class="pill"><span>🧩</span> Zapier</span>
+    </div>
+  </div>
+</div>
+
+<!-- MISSION / PROBLEM / SOLUTION -->
+<section id="mission" class="section" style="padding-bottom:64px">
+  <div class="container">
+    <span class="badge reveal">Mission</span>
+    <h2 class="reveal" style="font-size:32px;margin:8px 0 10px">Help local businesses turn happy customers into public proof — safely</h2>
+    <div class="grid-2">
+      <div class="reveal">
+        <h3 style="margin:0 0 6px;font-size:18px">The problem</h3>
+        <p class="muted">Owners finish great work but forget to ask, or ask inconsistently. A few bad reviews dominate, staff change, and nothing is tracked.</p>
+        <h3 style="margin:12px 0 6px;font-size:18px">The solution</h3>
+        <p class="muted">Automate the ask at the right moment via SMS/Email, show policy-safe links to Google/Trustpilot, collect private feedback in parallel, and log everything.</p>
+      </div>
+      <div class="card reveal">
+        <h3 style="margin:0 0 8px">Why it works</h3>
+        <ul style="margin:0;padding:0 0 0 18px;line-height:1.7;color:#cbd5e1">
+          <li>“Ask at emotional peak” timing</li>
+          <li>One-tap deep links to review forms</li>
+          <li>Multi-channel cascade (SMS → Email)</li>
+          <li>Audit logs, consent, and opt-outs</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE / USPs -->
+<section id="value" class="section" style="padding-top:0">
+  <div class="container">
+    <h2 class="reveal" style="font-size:32px;margin:0 0 14px">Why ReviewBoost</h2>
+    <p class="muted reveal" style="max-width:720px">A lightweight engine that increases genuine reviews while staying squarely inside platform rules.</p>
+    <div class="grid-4">
+      <div class="card reveal"><div>🛡️</div><h3>Policy-safe flows</h3><p class="muted">No gating, no incentives for positive reviews, and parallel private feedback.</p></div>
+      <div class="card reveal"><div>⚡</div><h3>Right-time triggers</h3><p class="muted">Job-complete, invoice-paid, or appointment-done → instant ask.</p></div>
+      <div class="card reveal"><div>🔗</div><h3>One-tap deep links</h3><p class="muted">Open the exact Google/Trustpilot review form in one tap.</p></div>
+      <div class="card reveal"><div>📊</div><h3>Proof & logs</h3><p class="muted">Invite → click → posted review, plus consent & opt-out logs.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="section" style="padding-top:0">
+  <div class="container">
+    <h2 class="reveal" style="font-size:32px;margin:0 0 14px">How it works</h2>
+    <div class="grid-3">
+      <div class="card reveal">
+        <h3>1) Connect tools</h3>
+        <p class="muted">Hook up your CRM/job app (Jobber/ServiceM8/Zapier) and add your Google/Trustpilot links.</p>
+      </div>
+      <div class="card reveal">
+        <h3>2) Set the cadence</h3>
+        <p class="muted">Choose trigger timing (immediate/next day) and channels (SMS, Email, WhatsApp). Templates are policy-safe.</p>
+      </div>
+      <div class="card reveal">
+        <h3>3) Collect & learn</h3>
+        <p class="muted">Requests go out, reviews roll in, and the dashboard shows performance and compliance checks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE DEMO -->
+<section id="demo" class="section" style="padding-top:0">
+  <div class="container" style="display:grid;gap:28px;align-items:start;grid-template-columns:1.05fr .95fr">
+    <div class="panel reveal">
+      <h3 style="margin:0 0 6px">Try the review request planner</h3>
+      <p class="small" style="margin:0 0 14px">Pick a channel, timing, and add-ons. We’ll estimate reviews per 100 requests and show compliance checks.</p>
+
+      <div class="controls">
+        <div class="field">
+          <label>Primary channel</label>
+          <div class="segment" role="group" aria-label="Channel">
+            <button type="button" class="chipbtn active" data-channel="sms">SMS</button>
+            <button type="button" class="chipbtn" data-channel="email">Email</button>
+            <button type="button" class="chipbtn" data-channel="whatsapp">WhatsApp</button>
+          </div>
+          <div class="small">We’ll cascade to a secondary channel at 24–48h if no action.</div>
+        </div>
+
+        <div class="field">
+          <label>Ask timing (minutes after job complete)</label>
+          <input id="delay" type="range" min="0" max="1440" step="15" value="60" class="slider">
+          <div class="kpis"><span class="kpi">Immediate (&lt; 120m) usually performs best</span><span class="kpi">Cadence: 0h → 24h → 7d</span></div>
+        </div>
+
+        <div class="field">
+          <label>Add-ons</label>
+          <div class="segment">
+            <button type="button" class="chipbtn" data-addon="qr">QR on receipt/van</button>
+            <button type="button" class="chipbtn" data-addon="staff">Staff nudge in-person</button>
+            <button type="button" class="chipbtn" data-addon="media">Include before/after photo</button>
+          </div>
+          <div class="small">These increase engagement without gating or incentivising outcomes.</div>
+        </div>
+
+        <div class="actions">
+          <button id="calc" class="btn-lite primary">Estimate impact</button>
+          <button id="resetDemo" class="btn-lite">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel reveal">
+      <h3 style="margin:0 0 6px">Estimate & compliance trace</h3>
+      <div class="status" id="statusBox">
+        <div id="badge" class="badge-lg badge-allow">POLICY-SAFE</div>
+        <div id="summary" style="margin-top:8px">Channel: <code>SMS</code> • Delay: <code>60m</code> • Add-ons: <code>None</code></div>
+        <div class="trace" id="trace" style="margin-top:10px;display:grid;gap:6px">
+          <div>• Gating check: <span class="ok" style="color:#a7f3d0">PASS</span> (public & private feedback options visible)</div>
+          <div>• Consent & opt-out: <span class="ok" style="color:#a7f3d0">PASS</span> (explicit consent + STOP/unsubscribe)</div>
+          <div>• Incentive policy: <span class="ok" style="color:#a7f3d0">PASS</span> (no rewards for positive sentiment)</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div id="impact" style="font-size:16px"><strong>Estimated reviews per 100 requests:</strong> <span id="est">14</span></div>
+        <p class="small" style="margin-top:8px">Back-of-the-napkin estimate for demo purposes only. Real results vary by niche, list quality, and message craft.</p>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:12px 0">
+        <div>
+          <div style="font-weight:700;margin-bottom:6px">Sample message (policy-safe)</div>
+          <pre id="sample" style="white-space:pre-wrap;margin:0;color:#d1d5db">
+Hi {{first_name}} — thanks for choosing {{brand}}. Could you share a quick review to help local customers find us?
+Google: {{google_link}}  •  Trustpilot: {{trustpilot_link}}
+If anything wasn’t perfect, just reply here so we can fix it. Reply STOP to opt-out.</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS SPLIT -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <h2 class="reveal" style="font-size:32px;margin:0 0 14px">Benefits</h2>
+    <div class="grid-2" style="margin-top:16px">
+      <div class="card reveal">
+        <h3 style="margin:0 0 6px">For Business Owners</h3>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span class="dot" style="width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--accent2),var(--accent1));margin-top:6px"></span><p class="muted">More reviews without chasing. Consistent asks, logged and measurable.</p></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span class="dot" style="width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--accent2),var(--accent1));margin-top:6px"></span><p class="muted">Trust & ranking lift from steady volume over time.</p></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span class="dot" style="width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--accent2),var(--accent1));margin-top:6px"></span><p class="muted">Compliance peace-of-mind: opt-outs, consent, and audit trails.</p></div>
+      </div>
+      <div class="card reveal">
+        <h3 style="margin:0 0 6px">For Teams</h3>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span class="dot" style="width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--accent2),var(--accent1));margin-top:6px"></span><p class="muted">Simple scripts and QR codes for in-person asks.</p></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span class="dot" style="width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--accent2),var(--accent1));margin-top:6px"></span><p class="muted">Dashboards for invites sent and reviews posted.</p></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span class="dot" style="width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--accent2),var(--accent1));margin-top:6px"></span><p class="muted">Templates that avoid spam triggers and keep tone human.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING STRIP -->
+<section id="pricing" class="section" style="padding:64px 0 64px">
+  <div class="container">
+    <h2 class="reveal" style="font-size:32px;margin:0 0 10px">Simple pricing</h2>
+    <div class="grid-3" style="margin-top:14px">
+      <div class="card reveal">
+        <h3>Starter</h3>
+        <p class="muted">£99/mo</p>
+        <ul style="margin:0;padding:0 0 0 18px;line-height:1.8;color:#cbd5e1">
+          <li>1 location</li><li>SMS & Email asks</li><li>Google & Trustpilot links</li><li>Consent + opt-out logs</li>
+        </ul>
+      </div>
+      <div class="card reveal" style="border-color:#10b981">
+        <h3>Pro</h3>
+        <p class="muted">£149/mo</p>
+        <ul style="margin:0;padding:0 0 0 18px;line-height:1.8;color:#cbd5e1">
+          <li>Up to 3 locations</li><li>WhatsApp cascade</li><li>QR kit & staff prompts</li><li>Private feedback inbox</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <h3>Partner</h3>
+        <p class="muted">Custom</p>
+        <ul style="margin:0;padding:0 0 0 18px;line-height:1.8;color:#cbd5e1">
+          <li>Multi-location</li><li>Jobber/ServiceM8 triggers</li><li>SLAs & training</li><li>Custom reporting</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section id="waitlist" class="section" style="padding-top:0">
+  <div class="container" style="max-width:720px">
+    <div class="reveal" style="border:1px solid var(--border);background:rgba(255,255,255,.06);border-radius:16px;padding:24px">
+      <h3 style="margin:0 0 6px">Get early access</h3>
+      <p class="muted">Tell us where to send the invite. We prioritise local service businesses ready to pilot in the next 30 days.</p>
+      <form id="wl" style="display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:12px">
+        <input id="email" type="email" placeholder="you@business.com" required style="padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0b0b0b;color:#fff;font-size:14px;outline:none" />
+        <button class="btn" type="submit">Join</button>
+      </form>
+      <div id="thanks" style="display:none;margin-top:12px;border:1px solid #065f46;background:#064e3b;color:#d1fae5;padding:10px;border-radius:10px;font-size:14px">Thanks! You’re on the list.</div>
+      <p class="small" style="margin-top:10px">By submitting, you agree to our <a href="#" class="link">privacy policy</a>. You can opt out anytime.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section" style="padding-top:0">
+  <div class="container" style="text-align:center">
+    <h2 class="reveal" style="font-size:32px;margin:0 0 10px">Ready to turn more jobs into 5★ reviews?</h2>
+    <p class="muted reveal" style="max-width:680px;margin:0 auto 18px">Install in an afternoon. Ask everyone, log everything, and grow steadily — the compliant way.</p>
+    <a class="btn" href="#waitlist">Join the waitlist</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-inner">
+    <p>© <span id="y"></span> ReviewBoost</p>
+    <div style="display:flex;gap:16px"><a class="link" href="#">Privacy</a><a class="link" href="#">Contact</a></div>
+  </div>
+</footer>
+
+<script>
+/* Reveal on scroll */
+const io = new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.18});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* Scroll progress */
+const prog=document.getElementById('progress');
+function updateProgress(){
+  const s=window.scrollY,h=document.body.scrollHeight-window.innerHeight,p=h?(s/h):0;
+  prog.style.width=`${p*100}%`;
+}
+updateProgress(); window.addEventListener('scroll',updateProgress,{passive:true});
+
+/* Hero orb follows mouse */
+const orb=document.getElementById('orb');
+if(orb){window.addEventListener('mousemove',(e)=>{const x=(e.clientX/window.innerWidth-0.5)*60;const y=(e.clientY/window.innerHeight-0.2)*30;orb.style.transform=`translate(calc(-50% + ${x}px), calc(-20% + ${y}px))`;},{passive:true});}
+
+/* Footer year + demo waitlist submit */
+document.getElementById('y').textContent=new Date().getFullYear();
+const form=document.getElementById('wl');
+form.addEventListener('submit',(e)=>{e.preventDefault();document.getElementById('thanks').style.display='block';form.reset();});
+
+/* Demo logic */
+const channelButtons=Array.from(document.querySelectorAll('.chipbtn[data-channel]'));
+const addonButtons=Array.from(document.querySelectorAll('.chipbtn[data-addon]'));
+let channel='sms';
+let delay=60;
+let addons=new Set();
+
+channelButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    channel = btn.getAttribute('data-channel');
+    channelButtons.forEach(b=>b.classList.toggle('active',b===btn));
+    refreshSummary(false);
+  })
+});
+
+const delayInput=document.getElementById('delay');
+delayInput.addEventListener('input',()=>{delay=parseInt(delayInput.value||'0',10);refreshSummary(false);});
+
+addonButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const key=btn.getAttribute('data-addon');
+    if(addons.has(key)){addons.delete(key);btn.classList.remove('active');}
+    else{addons.add(key);btn.classList.add('active');}
+    refreshSummary(false);
+  })
+});
+
+const badge=document.getElementById('badge');
+const summary=document.getElementById('summary');
+const trace=document.getElementById('trace');
+const est=document.getElementById('est');
+const sample=document.getElementById('sample');
+const statusBox=document.getElementById('statusBox');
+
+function estimatePer100(chan, delayMin, addonSet){
+  // Baselines (rough demo assumptions)
+  const base = { sms: 0.12, email: 0.06, whatsapp: 0.18 }[chan] || 0.10;
+
+  // Timing boost: < 120 min => +4pp, < 30 min => +6pp
+  let timingBoost = 0;
+  if(delayMin <= 30) timingBoost = 0.06;
+  else if(delayMin <= 120) timingBoost = 0.04;
+
+  // Add-ons (stack but cap total boost at +10pp)
+  let addonBoost = 0;
+  if(addonSet.has('qr')) addonBoost += 0.03;
+  if(addonSet.has('staff')) addonBoost += 0.05;
+  if(addonSet.has('media')) addonBoost += 0.02;
+  addonBoost = Math.min(addonBoost, 0.10);
+
+  // Soft cap at 35%
+  let rate = Math.min(base + timingBoost + addonBoost, 0.35);
+
+  // Secondary cascade assumption: +25% of the gap if no response (rough)
+  const cascadeBump = 0.25 * (1 - rate) * 0.25; // small incremental lift
+  rate = Math.min(rate + cascadeBump, 0.40);
+
+  return Math.round(rate * 100); // reviews per 100 requests
+}
+
+function policyChecks(){
+  // Demo: always policy-safe given our design (no gating / opt-out)
+  return {
+    gating: true, // pass
+    consent: true,
+    incentive: true
+  }
+}
+
+function makeSample(chan){
+  const line1 = chan==='email'
+    ? "Subject: Quick favour — 30 seconds?\n\nHi {{first_name}}, thanks for choosing {{brand}}.\n"
+    : "Hi {{first_name}} — thanks for choosing {{brand}}.\n";
+  const line2 = "Could you share a quick review to help local customers find us?\nGoogle: {{google_link}}  •  Trustpilot: {{trustpilot_link}}\n";
+  const line3 = "If anything wasn’t perfect, reply so we can fix it. Reply STOP to opt-out.";
+  return (line1+line2+line3).trim();
+}
+
+function refreshSummary(flash=true){
+  const checks = policyChecks();
+  badge.textContent = checks.gating && checks.consent && checks.incentive ? 'POLICY-SAFE' : 'CHECK NEEDED';
+  badge.className = 'badge-lg ' + (checks.gating && checks.consent && checks.incentive ? 'badge-allow' : 'badge-warn');
+
+  const addonsTxt = addons.size? Array.from(addons).join(', ') : 'None';
+  summary.innerHTML = `Channel: <code>${channel.toUpperCase()}</code> • Delay: <code>${delay}m</code> • Add-ons: <code>${addonsTxt}</code>`;
+
+  trace.innerHTML = `
+    <div>• Gating check: <span class="${checks.gating?'ok':''}" style="color:${checks.gating?'#a7f3d0':'#fde68a'}">${checks.gating?'PASS':'WARN'}</span> (public & private feedback options visible)</div>
+    <div>• Consent & opt-out: <span class="${checks.consent?'ok':''}" style="color:${checks.consent?'#a7f3d0':'#fde68a'}">${checks.consent?'PASS':'WARN'}</span> (explicit consent + STOP/unsubscribe)</div>
+    <div>• Incentive policy: <span class="${checks.incentive?'ok':''}" style="color:${checks.incentive?'#a7f3d0':'#fde68a'}">${checks.incentive?'PASS':'WARN'}</span> (no rewards for positive sentiment)</div>
+  `;
+
+  est.textContent = String(estimatePer100(channel, delay, addons));
+  sample.textContent = makeSample(channel);
+
+  if(flash){
+    statusBox.animate([{filter:'brightness(1.0)'},{filter:'brightness(1.15)'},{filter:'brightness(1.0)'}],{duration:400,easing:'ease-out'});
+  }
+}
+
+document.getElementById('calc').addEventListener('click',()=>refreshSummary(true));
+document.getElementById('resetDemo').addEventListener('click',()=>{
+  channel='sms'; delay=60; addons.clear();
+  channelButtons.forEach(b=>b.classList.toggle('active',b.getAttribute('data-channel')==='sms'));
+  addonButtons.forEach(b=>b.classList.remove('active'));
+  delayInput.value='60';
+  refreshSummary(false);
+});
+refreshSummary(false);
+</script>
+
+</body>
+</html>
