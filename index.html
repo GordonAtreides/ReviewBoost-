@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ReviewBoost — Get more reviews, automatically</title>
+<title>Grow My Reviews — Get more reviews, automatically</title>
 <meta name="description" content="Trigger policy-safe SMS/Email review requests, grow Google & Trustpilot reviews, and prove ROI with audit logs." />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
@@ -50,6 +50,37 @@ nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);
 .grid-2{display:grid;gap:18px;grid-template-columns:repeat(2,1fr)}
 @media(max-width:980px){.grid-3{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}
 
+/* HOW IT WORKS — PHONE MOCKUPS */
+.phone-card{display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:flex-start;border:1px solid var(--border);border-radius:18px;background:#fff;padding:20px;box-shadow:0 10px 30px -20px rgba(2,6,23,.25);min-height:460px}
+.phone{position:relative;width:260px;height:480px;border:10px solid #111;border-bottom-width:14px;border-top-width:14px;border-radius:36px;background:#f1f5f9;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);overflow:hidden}
+.notch{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);width:96px;height:18px;background:#111;border-radius:12px}
+.screen{position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;gap:12px}
+
+/* Step 1 visuals */
+.sms-bubble{align-self:flex-start;max-width:85%;background:#fff;border:1px solid var(--border);border-radius:14px;padding:10px 12px;box-shadow:0 4px 10px rgba(0,0,0,.05)}
+.brand{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.brand .mini{width:16px;height:16px;border-radius:5px;background:linear-gradient(135deg,#60a5fa,#22d3ee)}
+.cta{margin-top:8px;display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:var(--blue);color:#fff;font-weight:700;font-size:13px;box-shadow:0 8px 16px -10px rgba(37,99,235,.6)}
+.pulse{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 8px 16px -10px rgba(37,99,235,.6)}50%{transform:scale(1.03);box-shadow:0 10px 26px -10px rgba(37,99,235,.75)}}
+
+/* Step 2 visuals */
+.sheet{margin-top:auto;background:#fff;border:1px solid var(--border);border-radius:18px;padding:12px;box-shadow:0 -8px 20px rgba(0,0,0,.06);transform:translateY(120%);opacity:0}
+.sheet .option{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--border);padding:10px 12px;border-radius:12px;margin:8px 0}
+.tap{position:absolute;width:28px;height:28px;border-radius:999px;background:rgba(37,99,235,.18);border:2px solid var(--blue);left:180px;top:170px;transform:scale(.2);opacity:0}
+.ripple{animation:ripple .9s ease-out forwards}
+@keyframes ripple{0%{transform:scale(.2);opacity:0}20%{opacity:1}100%{transform:scale(2.4);opacity:0}}
+.slideUp{animation:slideUp .6s ease-out .25s forwards}
+@keyframes slideUp{to{transform:translateY(0);opacity:1}}
+
+/* Step 3 visuals */
+.stars{display:flex;gap:6px;margin:30px auto 6px}
+.star{width:28px;height:28px;border-radius:6px;background:#e2e8f0;position:relative;overflow:hidden}
+.star.fill::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#fde68a,#f59e0b)}
+.thanks{opacity:0;transform:translateY(8px);text-align:center;font-weight:700;color:var(--green)}
+.show{animation:show .6s ease-out .2s forwards}
+@keyframes show{to{opacity:1;transform:none}}
+
 /* FEATURE TILES (flip on hover) */
 .tiles{display:grid;gap:18px;grid-template-columns:repeat(3,1fr);margin-top:24px}
 @media(max-width:980px){.tiles{grid-template-columns:1fr}}
@@ -70,11 +101,7 @@ nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);
 .back{transform:rotateY(180deg);background:#0f172a;color:#e2e8f0;border:1px solid #0f172a}
 .back p{color:#cbd5e1}
 
-/* HOW IT WORKS (3 steps) */
-.step{display:flex;gap:14px;align-items:flex-start}
-.step .num{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--blue);color:#fff;font-weight:800}
-
-/* PRICING TABLE */
+/* PRICING */
 .pricing{margin-top:8px}
 .switch{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);padding:6px 8px;border-radius:999px}
 .switch input{appearance:none;width:42px;height:24px;border-radius:999px;background:#cbd5e1;position:relative;outline:none;cursor:pointer;transition:.2s}
@@ -92,11 +119,9 @@ thead th.plan{background:linear-gradient(180deg,#f9fafb,#fff)}
 .cta-sm{padding:8px 12px;border-radius:10px;font-weight:700;background:var(--blue);color:#fff;border:none;cursor:pointer}
 tr:hover{background:#fafafa}
 
-/* FAQ */
+/* FAQ + FOOTER */
 .faq dt{font-weight:800;margin:12px 0 4px}
 .faq dd{margin:0 0 10px;color:var(--muted)}
-
-/* FOOTER */
 footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);text-align:center}
 </style>
 </head>
@@ -105,7 +130,7 @@ footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);text
 <!-- NAV -->
 <nav>
   <div class="container nav-inner">
-    <div class="logo"><span class="mark"></span><span>ReviewBoost</span></div>
+    <div class="logo"><span class="mark"></span><span>Grow My Reviews</span></div>
     <div class="links">
       <a href="#features">Features</a>
       <a href="#how">How it works</a>
@@ -120,11 +145,11 @@ footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);text
 <header class="hero">
   <div class="container" style="text-align:center">
     <span class="badge">Policy-safe review growth</span>
-    <h1>Getting more reviews is easy</h1>
-    <p>Send professionally branded SMS/Email requests right when jobs are done. Make it one-tap to leave a Google or Trustpilot review — with private feedback available in parallel (no gating).</p>
+    <h1>Get more Google & Trustpilot reviews — automatically</h1>
+    <p>Send professionally branded SMS/Email requests right when jobs are done. Make it one-tap to leave a review — with private feedback available in parallel (no gating).</p>
     <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <a class="btn" href="#cta">Start for free</a>
-      <a class="btn ghost" href="#pricing">See pricing</a>
+      <a class="btn.ghost btn ghost" href="#pricing">See pricing</a>
     </div>
     <div class="kpis">
       <span class="kpi"><span class="dot"></span> No credit card required</span>
@@ -134,31 +159,72 @@ footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);text
   </div>
 </header>
 
-<!-- HOW IT WORKS (visual narrative like competitor) -->
+<!-- HOW IT WORKS -->
 <section id="how" class="section">
   <div class="container">
     <h2 style="text-align:center;font-size:32px;margin:0 0 8px">How it works</h2>
     <p class="muted" style="text-align:center;max-width:780px;margin:0 auto 22px">
-      Impress customers with branded messages and make it simple to leave a review.
+      A simple, compliant flow that customers actually complete.
     </p>
+
     <div class="grid-3">
-      <div class="card" style="text-align:center">
-        <img alt="" src="https://dummyimage.com/240x420/edeff4/0f172a&text=Step+1" style="width:100%;max-width:240px;border-radius:24px;margin:0 auto 10px;display:block">
-        <div class="muted">Job complete → Review request sent with deep link</div>
+      <!-- STEP 1 -->
+      <div class="phone-card">
+        <div class="phone hiw" data-step="1">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="sms-bubble">
+              <div class="brand"><span class="mini"></span><strong>Grow My Reviews</strong></div>
+              <div class="muted" style="font-size:14px">Thanks for choosing us! Mind leaving a quick review?</div>
+              <div class="cta pulse">Leave a review →</div>
+            </div>
+          </div>
+        </div>
+        <div class="muted" style="text-align:center">Job complete → Review request sent with deep link</div>
       </div>
-      <div class="card" style="text-align:center">
-        <img alt="" src="https://dummyimage.com/240x420/edeff4/0f172a&text=Step+2" style="width:100%;max-width:240px;border-radius:24px;margin:0 auto 10px;display:block">
-        <div class="muted">Customer taps to review or leave private feedback</div>
+
+      <!-- STEP 2 -->
+      <div class="phone-card">
+        <div class="phone hiw" data-step="2">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="sms-bubble" style="align-self:center">
+              <div class="muted" style="font-size:14px">Tap to choose where to review</div>
+              <div class="cta" style="align-self:center">Review options</div>
+            </div>
+            <span class="tap"></span>
+            <div class="sheet">
+              <div class="option"><strong>⭐ Review on Google</strong><span class="muted">One-tap link</span></div>
+              <div class="option"><strong>📝 Leave private feedback</strong><span class="muted">Goes to inbox</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="muted" style="text-align:center">Customer taps to review or leave private feedback</div>
       </div>
-      <div class="card" style="text-align:center">
-        <img alt="" src="https://dummyimage.com/240x420/edeff4/0f172a&text=Step+3" style="width:100%;max-width:240px;border-radius:24px;margin:0 auto 10px;display:block">
-        <div class="muted">Public review posted • You get audit-ready logs</div>
+
+      <!-- STEP 3 -->
+      <div class="phone-card">
+        <div class="phone hiw" data-step="3">
+          <div class="notch"></div>
+          <div class="screen" style="align-items:center">
+            <div class="muted">Rate your experience</div>
+            <div class="stars">
+              <div class="star"></div>
+              <div class="star"></div>
+              <div class="star"></div>
+              <div class="star"></div>
+              <div class="star"></div>
+            </div>
+            <div class="thanks">Thanks for your review! 🎉</div>
+          </div>
+        </div>
+        <div class="muted" style="text-align:center">Public review posted • You get audit-ready logs</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES with FLIP TILES -->
+<!-- FEATURES with flip tiles -->
 <section id="features" class="section" style="padding-top:0">
   <div class="container">
     <h2 style="text-align:center;font-size:32px;margin:0 0 10px">Everything you need to get more reviews</h2>
@@ -208,56 +274,11 @@ footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);text
           </div>
         </div>
       </div>
-
-      <!-- AI Feedback Manager -->
-      <div class="tile">
-        <div class="tile-inner">
-          <div class="face front">
-            <div class="icon">🤖</div>
-            <h3>AI Feedback Manager</h3>
-            <p>Suggested replies, faster.</p>
-          </div>
-          <div class="face back">
-            <h3 style="margin:0 0 6px">AI Feedback Manager</h3>
-            <p>Draft empathetic replies and summaries, then approve with one click. Keep tone on-brand.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Review Widgets -->
-      <div class="tile">
-        <div class="tile-inner">
-          <div class="face front">
-            <div class="icon">⭐</div>
-            <h3>Review Widgets</h3>
-            <p>Show social proof on site.</p>
-          </div>
-          <div class="face back">
-            <h3 style="margin:0 0 6px">Review Widgets</h3>
-            <p>Embed live review carousels and badges with zero code. Auto-refresh and filters built-in.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Multi-Campaign -->
-      <div class="tile">
-        <div class="tile-inner">
-          <div class="face front">
-            <div class="icon">🎯</div>
-            <h3>Multi-Campaign</h3>
-            <p>Different flows per service.</p>
-          </div>
-          <div class="face back">
-            <h3 style="margin:0 0 6px">Multi-Campaign</h3>
-            <p>Create distinct templates and cadences for each service or location. A/B test to improve results.</p>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING TABLE with toggle -->
+<!-- PRICING -->
 <section id="pricing" class="section" style="padding-top:0">
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
@@ -358,7 +379,7 @@ footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);text
 </section>
 
 <footer>
-  © <span id="y"></span> ReviewBoost • Privacy • Security • Contact
+  © <span id="y"></span> Grow My Reviews • Privacy • Security • Contact
 </footer>
 
 <script>
@@ -378,7 +399,40 @@ function renderPrices(){
 toggle.addEventListener('change', renderPrices);
 renderPrices();
 
-/* simple CTA click (demo) */
+/* HOW IT WORKS animations — play when section enters view */
+const steps = document.querySelectorAll('.phone.hiw');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const step = e.target.dataset.step;
+    if(step==='2') {
+      // tap ripple + slide up sheet
+      const tap = e.target.querySelector('.tap');
+      const sheet = e.target.querySelector('.sheet');
+      tap.classList.remove('ripple'); sheet.classList.remove('slideUp');
+      // restart animations
+      void tap.offsetWidth; void sheet.offsetWidth;
+      setTimeout(()=>{ tap.classList.add('ripple'); }, 300);
+      setTimeout(()=>{ sheet.classList.add('slideUp'); }, 600);
+    }
+    if(step==='3') {
+      // fill stars one by one, then show thanks
+      const stars = Array.from(e.target.querySelectorAll('.star'));
+      const thanks = e.target.querySelector('.thanks');
+      stars.forEach(s=>s.classList.remove('fill'));
+      thanks.classList.remove('show');
+      let i=0;
+      const fill = ()=> {
+        if(i<stars.length){ stars[i].classList.add('fill'); i++; setTimeout(fill, 180); }
+        else { thanks.classList.add('show'); }
+      };
+      setTimeout(fill, 300);
+    }
+  });
+},{threshold:0.5});
+steps.forEach(s=>obs.observe(s));
+
+/* demo CTA buttons */
 document.querySelectorAll('.cta-sm').forEach(b=>{
   b.addEventListener('click', () => alert(`Great choice! Plan: ${b.dataset.plan}`));
 });
