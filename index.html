@@ -3,133 +3,385 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ReviewBoost — Get More Reviews, Automatically</title>
-<meta name="description" content="Automated SMS/Email/WhatsApp review requests, compliant with Google & Trustpilot policies. Grow your reputation without hassle." />
+<title>ReviewBoost — Get more reviews, automatically</title>
+<meta name="description" content="Trigger policy-safe SMS/Email review requests, grow Google & Trustpilot reviews, and prove ROI with audit logs." />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg:#ffffff; --fg:#1e293b; --muted:#64748b; --border:#e2e8f0;
-  --accent:#2563eb; --accent2:#22c55e;
+  --bg:#ffffff; --fg:#0f172a; --muted:#64748b; --border:#e2e8f0; --soft:#f8fafc;
+  --blue:#2563eb; --violet:#7c3aed; --pink:#ec4899; --green:#22c55e; --amber:#f59e0b;
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--fg)}
-a{text-decoration:none}
-.container{max-width:1120px;margin:0 auto;padding:0 24px}
+a{color:inherit;text-decoration:none}
+.container{max-width:1160px;margin:0 auto;padding:0 24px}
 h1,h2,h3{letter-spacing:-.02em}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:10px;font-weight:700;font-size:14px;background:var(--accent);color:#fff;transition:.2s}
-.btn:hover{background:#1d4ed8}
-.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-.card{border:1px solid var(--border);background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 10px rgba(0,0,0,.04)}
-.section{padding:80px 0}
-.grid-3{display:grid;gap:20px;grid-template-columns:repeat(3,1fr)}
-@media(max-width:960px){.grid-3{grid-template-columns:1fr}}
-nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);z-index:50}
+.muted{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:12px;font-weight:700;font-size:14px;background:var(--blue);color:#fff;transition:.18s ease;box-shadow:0 6px 20px -8px rgba(37,99,235,.45)}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.btn.ghost{background:transparent;color:var(--blue);border:1px solid var(--blue);box-shadow:none}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(37,99,235,.08);color:var(--blue)}
+.card{border:1px solid var(--border);background:#fff;border-radius:16px;padding:22px;box-shadow:0 8px 24px -16px rgba(2,6,23,.2)}
+.section{padding:90px 0}
+
+/* NAV */
+nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--border);z-index:40}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
-.logo{font-weight:800;font-size:18px;color:var(--accent)}
-.hero{padding:120px 0 80px;text-align:center;background:linear-gradient(180deg,#f8fafc,#fff)}
-.hero h1{font-size:clamp(36px,6vw,56px);margin:0}
-.hero p{max-width:720px;margin:16px auto;color:var(--muted);font-size:18px}
-.badge{display:inline-block;background:rgba(37,99,235,.08);color:var(--accent);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600}
-.kpis{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
-.kpi{font-size:13px;color:var(--muted)}
-footer{border-top:1px solid var(--border);padding:30px 0;text-align:center;color:var(--muted);font-size:14px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800}
+.logo .mark{width:28px;height:28px;border-radius:9px;background:
+  radial-gradient(120% 120% at 0% 0%, var(--blue), transparent 60%),
+  radial-gradient(120% 120% at 100% 100%, #22d3ee, transparent 60%),
+  #1f2937}
+.links{display:none;gap:18px}
+@media(min-width:860px){.links{display:flex}}
+
+/* HERO */
+.hero{padding:120px 0 84px;background:linear-gradient(180deg,var(--soft),#fff)}
+.hero h1{font-size:clamp(36px,6vw,56px);margin:10px 0 6px}
+.hero p{max-width:760px;margin:0 auto;color:var(--muted);font-size:18px}
+.kpis{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.kpi{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.kpi .dot{width:8px;height:8px;border-radius:999px;background:var(--green)}
+
+/* GRID helpers */
+.grid-3{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
+.grid-2{display:grid;gap:18px;grid-template-columns:repeat(2,1fr)}
+@media(max-width:980px){.grid-3{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}
+
+/* FEATURE TILES (flip on hover) */
+.tiles{display:grid;gap:18px;grid-template-columns:repeat(3,1fr);margin-top:24px}
+@media(max-width:980px){.tiles{grid-template-columns:1fr}}
+.tile{perspective:1100px}
+.tile-inner{
+  position:relative;height:220px;border-radius:16px;border:1px solid var(--border);background:#fff;
+  transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.7,.2,1), box-shadow .3s;
+  box-shadow:0 8px 24px -16px rgba(2,6,23,.2);
+}
+.tile:hover .tile-inner{transform:rotateY(180deg);box-shadow:0 20px 60px -24px rgba(2,6,23,.25)}
+.face{
+  position:absolute;inset:0;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;backface-visibility:hidden;
+}
+.face .icon{width:54px;height:54px;border-radius:14px;display:grid;place-items:center;font-size:26px;
+  background:linear-gradient(135deg,#e0e7ff,#f0fdf4);color:#111;border:1px solid var(--border)}
+.face h3{margin:10px 0 4px}
+.face p{margin:0;color:var(--muted);text-align:center}
+.back{transform:rotateY(180deg);background:#0f172a;color:#e2e8f0;border:1px solid #0f172a}
+.back p{color:#cbd5e1}
+
+/* HOW IT WORKS (3 steps) */
+.step{display:flex;gap:14px;align-items:flex-start}
+.step .num{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--blue);color:#fff;font-weight:800}
+
+/* PRICING TABLE */
+.pricing{margin-top:8px}
+.switch{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);padding:6px 8px;border-radius:999px}
+.switch input{appearance:none;width:42px;height:24px;border-radius:999px;background:#cbd5e1;position:relative;outline:none;cursor:pointer;transition:.2s}
+.switch input::after{content:"";position:absolute;left:4px;top:4px;width:16px;height:16px;border-radius:999px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:.2s}
+.switch input:checked{background:var(--blue)}
+.switch input:checked::after{transform:translateX(18px)}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:14px;background:#fff;box-shadow:0 10px 30px -20px rgba(2,6,23,.25);margin-top:16px}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:860px}
+thead th{position:sticky;top:0;background:#fff;font-weight:800;color:#0b1220;font-size:14px;padding:16px;border-bottom:1px solid var(--border)}
+tbody td, tbody th{padding:14px;border-bottom:1px solid var(--border);text-align:center}
+tbody th{font-weight:600;text-align:left}
+thead th.plan{background:linear-gradient(180deg,#f9fafb,#fff)}
+.plan-badge{display:inline-block;margin-left:8px;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--violet),var(--pink))}
+.price{font-size:22px;font-weight:800}
+.cta-sm{padding:8px 12px;border-radius:10px;font-weight:700;background:var(--blue);color:#fff;border:none;cursor:pointer}
+tr:hover{background:#fafafa}
+
+/* FAQ */
+.faq dt{font-weight:800;margin:12px 0 4px}
+.faq dd{margin:0 0 10px;color:var(--muted)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:30px 0;color:var(--muted);text-align:center}
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <div class="container nav-inner">
-    <div class="logo">ReviewBoost</div>
-    <div style="display:flex;gap:18px;align-items:center">
-      <a href="#features" style="color:var(--fg)">Features</a>
-      <a href="#pricing" style="color:var(--fg)">Pricing</a>
-      <a class="btn" href="#waitlist">Start Free</a>
+    <div class="logo"><span class="mark"></span><span>ReviewBoost</span></div>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
     </div>
+    <a class="btn" href="#cta">Start Free</a>
   </div>
 </nav>
 
+<!-- HERO -->
 <header class="hero">
-  <div class="container">
-    <div class="badge">⭐ Policy-safe review growth</div>
-    <h1>Get More Google & Trustpilot Reviews — Automatically</h1>
-    <p>Send one-tap review requests right when jobs are done. Stay compliant, capture more proof, and grow trust without chasing customers.</p>
-    <div style="margin-top:24px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
-      <a class="btn" href="#waitlist">Start for Free</a>
-      <a class="btn ghost" href="#demo">See Demo</a>
+  <div class="container" style="text-align:center">
+    <span class="badge">Policy-safe review growth</span>
+    <h1>Getting more reviews is easy</h1>
+    <p>Send professionally branded SMS/Email requests right when jobs are done. Make it one-tap to leave a Google or Trustpilot review — with private feedback available in parallel (no gating).</p>
+    <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn" href="#cta">Start for free</a>
+      <a class="btn ghost" href="#pricing">See pricing</a>
     </div>
     <div class="kpis">
-      <span class="kpi">No credit card required</span>
-      <span class="kpi">Opt-out built-in</span>
-      <span class="kpi">Works with Jobber, ServiceM8 & Zapier</span>
+      <span class="kpi"><span class="dot"></span> No credit card required</span>
+      <span class="kpi"><span class="dot"></span> Opt-out & consent logging</span>
+      <span class="kpi"><span class="dot"></span> Works with Jobber • ServiceM8 • Zapier</span>
     </div>
   </div>
 </header>
 
-<section id="features" class="section">
+<!-- HOW IT WORKS (visual narrative like competitor) -->
+<section id="how" class="section">
   <div class="container">
-    <h2 style="font-size:32px;margin-bottom:20px;text-align:center">Features</h2>
+    <h2 style="text-align:center;font-size:32px;margin:0 0 8px">How it works</h2>
+    <p class="muted" style="text-align:center;max-width:780px;margin:0 auto 22px">
+      Impress customers with branded messages and make it simple to leave a review.
+    </p>
     <div class="grid-3">
-      <div class="card">
-        <h3>Automated Triggers</h3>
-        <p class="muted">Send SMS/Email/WhatsApp review requests instantly at job completion, invoice paid, or appointment done.</p>
+      <div class="card" style="text-align:center">
+        <img alt="" src="https://dummyimage.com/240x420/edeff4/0f172a&text=Step+1" style="width:100%;max-width:240px;border-radius:24px;margin:0 auto 10px;display:block">
+        <div class="muted">Job complete → Review request sent with deep link</div>
       </div>
-      <div class="card">
-        <h3>One-Tap Links</h3>
-        <p class="muted">Deep links open Google/Trustpilot directly — no searching, no friction. QR codes & NFC cards supported.</p>
+      <div class="card" style="text-align:center">
+        <img alt="" src="https://dummyimage.com/240x420/edeff4/0f172a&text=Step+2" style="width:100%;max-width:240px;border-radius:24px;margin:0 auto 10px;display:block">
+        <div class="muted">Customer taps to review or leave private feedback</div>
       </div>
-      <div class="card">
-        <h3>Private Feedback Path</h3>
-        <p class="muted">Let unhappy customers leave private feedback while happy ones post publicly. All policy-safe, no gating.</p>
+      <div class="card" style="text-align:center">
+        <img alt="" src="https://dummyimage.com/240x420/edeff4/0f172a&text=Step+3" style="width:100%;max-width:240px;border-radius:24px;margin:0 auto 10px;display:block">
+        <div class="muted">Public review posted • You get audit-ready logs</div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="pricing" class="section" style="background:#f9fafb">
+<!-- FEATURES with FLIP TILES -->
+<section id="features" class="section" style="padding-top:0">
   <div class="container">
-    <h2 style="font-size:32px;margin-bottom:20px;text-align:center">Simple Pricing</h2>
-    <div class="grid-3">
-      <div class="card">
-        <h3>Starter</h3>
-        <p class="muted">£99/mo — 1 location, SMS & Email</p>
+    <h2 style="text-align:center;font-size:32px;margin:0 0 10px">Everything you need to get more reviews</h2>
+
+    <div class="tiles">
+      <!-- Reputation Monitoring -->
+      <div class="tile">
+        <div class="tile-inner">
+          <div class="face front">
+            <div class="icon">📡</div>
+            <h3>Reputation Monitoring</h3>
+            <p>Track new reviews across platforms.</p>
+          </div>
+          <div class="face back">
+            <h3 style="margin:0 0 6px">Reputation Monitoring</h3>
+            <p>Monitor & analyse every public review from Google, Trustpilot and more. Alerts help you respond quickly and spot trends.</p>
+          </div>
+        </div>
       </div>
-      <div class="card" style="border:2px solid var(--accent)">
-        <h3>Pro</h3>
-        <p class="muted">£149/mo — 3 locations, WhatsApp cascade, private inbox</p>
+
+      <!-- Review Automation -->
+      <div class="tile">
+        <div class="tile-inner">
+          <div class="face front">
+            <div class="icon">⚙️</div>
+            <h3>Review Automation</h3>
+            <p>Right-time SMS/Email/WhatsApp.</p>
+          </div>
+          <div class="face back">
+            <h3 style="margin:0 0 6px">Review Automation</h3>
+            <p>Trigger review requests at job-complete with follow-ups at 24h & 7d. Opt-outs & consent logs included.</p>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <h3>Partner</h3>
-        <p class="muted">Custom — multi-location, integrations, SLAs</p>
+
+      <!-- Dashboard -->
+      <div class="tile">
+        <div class="tile-inner">
+          <div class="face front">
+            <div class="icon">📊</div>
+            <h3>Dashboard</h3>
+            <p>Invites → clicks → reviews.</p>
+          </div>
+          <div class="face back">
+            <h3 style="margin:0 0 6px">Dashboard</h3>
+            <p>See performance by channel, timing, and location. Export audit logs for compliance or reporting.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Feedback Manager -->
+      <div class="tile">
+        <div class="tile-inner">
+          <div class="face front">
+            <div class="icon">🤖</div>
+            <h3>AI Feedback Manager</h3>
+            <p>Suggested replies, faster.</p>
+          </div>
+          <div class="face back">
+            <h3 style="margin:0 0 6px">AI Feedback Manager</h3>
+            <p>Draft empathetic replies and summaries, then approve with one click. Keep tone on-brand.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review Widgets -->
+      <div class="tile">
+        <div class="tile-inner">
+          <div class="face front">
+            <div class="icon">⭐</div>
+            <h3>Review Widgets</h3>
+            <p>Show social proof on site.</p>
+          </div>
+          <div class="face back">
+            <h3 style="margin:0 0 6px">Review Widgets</h3>
+            <p>Embed live review carousels and badges with zero code. Auto-refresh and filters built-in.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-Campaign -->
+      <div class="tile">
+        <div class="tile-inner">
+          <div class="face front">
+            <div class="icon">🎯</div>
+            <h3>Multi-Campaign</h3>
+            <p>Different flows per service.</p>
+          </div>
+          <div class="face back">
+            <h3 style="margin:0 0 6px">Multi-Campaign</h3>
+            <p>Create distinct templates and cadences for each service or location. A/B test to improve results.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="waitlist" class="section">
-  <div class="container" style="max-width:600px">
-    <div class="card" style="text-align:center">
-      <h3>Start Free Today</h3>
-      <p class="muted">Join the waitlist — no credit card required. We prioritise businesses ready to pilot within 30 days.</p>
-      <form id="wl" style="margin-top:16px;display:flex;gap:8px">
-        <input type="email" placeholder="you@business.com" required
-          style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:14px">
-        <button class="btn" type="submit">Get Access</button>
-      </form>
-      <div id="thanks" style="display:none;margin-top:10px;color:var(--accent2);font-weight:600">Thanks! You’re on the list.</div>
+<!-- PRICING TABLE with toggle -->
+<section id="pricing" class="section" style="padding-top:0">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <h2 style="font-size:32px;margin:0">Our Pricing</h2>
+      <label class="switch" aria-label="Toggle billing period">
+        <span class="muted" style="font-weight:700">Annually</span>
+        <input type="checkbox" id="billToggle" />
+        <span class="muted" style="font-weight:700">Monthly</span>
+      </label>
     </div>
+
+    <div class="table-wrap pricing">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:28%"></th>
+            <th class="plan">Starter</th>
+            <th class="plan">Growth <span class="plan-badge">Most Popular</span></th>
+            <th class="plan">Pro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Price</th>
+            <td class="price" data-m="99" data-y="79">£79<span class="muted" style="font-size:12px">/mo</span></td>
+            <td class="price" data-m="149" data-y="119">£119<span class="muted" style="font-size:12px">/mo</span></td>
+            <td class="price" data-m="219" data-y="179">£179<span class="muted" style="font-size:12px">/mo</span></td>
+          </tr>
+          <tr>
+            <th>SMS & Email Review Requesting</th>
+            <td>✔</td><td>✔</td><td>✔</td>
+          </tr>
+          <tr>
+            <th>Automated Follow-up Reminders</th>
+            <td>✔</td><td>✔</td><td>✔</td>
+          </tr>
+          <tr>
+            <th>Bulk Review Requesting</th>
+            <td>✔</td><td>✔</td><td>✔</td>
+          </tr>
+          <tr>
+            <th>WhatsApp Cascade</th>
+            <td>—</td><td>✔</td><td>✔</td>
+          </tr>
+          <tr>
+            <th>Private Feedback Inbox</th>
+            <td>—</td><td>✔</td><td>✔</td>
+          </tr>
+          <tr>
+            <th>Dashboard Access & Analytics</th>
+            <td>✔</td><td>✔</td><td>✔</td>
+          </tr>
+          <tr>
+            <th>Multi-Location Support</th>
+            <td>1 location</td><td>Up to 3</td><td>Unlimited</td>
+          </tr>
+          <tr>
+            <th>Support</th>
+            <td>Email</td><td>Chat & Email</td><td>Priority + SLAs</td>
+          </tr>
+          <tr>
+            <th></th>
+            <td><button class="cta-sm" data-plan="Starter">Sign up Free</button></td>
+            <td><button class="cta-sm" data-plan="Growth">Sign up Free</button></td>
+            <td><button class="cta-sm" data-plan="Pro">Sign up Free</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin-top:10px">Annual pricing shown by default (billed yearly). Toggle for monthly.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="section" style="padding-top:0;background:var(--soft)">
+  <div class="container card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div>
+      <h3 style="margin:0 0 4px">Start free — install in an afternoon</h3>
+      <p class="muted" style="margin:0">Ask everyone, log everything, grow steadily (no gating).</p>
+    </div>
+    <a class="btn" href="#top">Create account</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section" style="padding-top:0">
+  <div class="container">
+    <h2 style="font-size:32px;margin:0 0 10px">FAQ</h2>
+    <dl class="faq">
+      <dt>Is this compliant with Google/Trustpilot policies?</dt>
+      <dd>Yes. We never gate reviews or incentivise positive sentiment. Customers always see public review links and a private feedback option in parallel.</dd>
+      <dt>Can my team ask in person?</dt>
+      <dd>Absolutely. Use our QR/NFC tap cards and staff prompts so customers can review in under 60 seconds.</dd>
+      <dt>What data do you store?</dt>
+      <dd>Minimal contact info (email/phone), timestamps, delivery/click events, and public review links. You control retention and can export/delete at any time.</dd>
+    </dl>
   </div>
 </section>
 
 <footer>
-  <div class="container">
-    © <span id="y"></span> ReviewBoost — All rights reserved
-  </div>
+  © <span id="y"></span> ReviewBoost • Privacy • Security • Contact
 </footer>
 
 <script>
-document.getElementById('y').textContent=new Date().getFullYear();
-const f=document.getElementById('wl');f.addEventListener('submit',e=>{e.preventDefault();document.getElementById('thanks').style.display='block';f.reset();});
+/* footer year */
+document.getElementById('y').textContent = new Date().getFullYear();
+
+/* pricing toggle */
+const toggle = document.getElementById('billToggle');
+const priceCells = Array.from(document.querySelectorAll('.price'));
+function renderPrices(){
+  const yearly = !toggle.checked;
+  priceCells.forEach(td=>{
+    const val = yearly ? td.dataset.y : td.dataset.m;
+    td.innerHTML = `£${val}<span class="muted" style="font-size:12px">/mo</span>`;
+  });
+}
+toggle.addEventListener('change', renderPrices);
+renderPrices();
+
+/* simple CTA click (demo) */
+document.querySelectorAll('.cta-sm').forEach(b=>{
+  b.addEventListener('click', () => alert(`Great choice! Plan: ${b.dataset.plan}`));
+});
 </script>
 
 </body>
